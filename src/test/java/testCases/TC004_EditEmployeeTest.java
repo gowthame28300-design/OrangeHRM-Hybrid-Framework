@@ -23,6 +23,7 @@ public class TC004_EditEmployeeTest extends BaseClass{
 	    PersonalDetailsPage.enterLicenceDate();
 	    PersonalDetailsPage.clickNationalityButton("Indian");
 	    PersonalDetailsPage.selectMaritalStatus("Single");
+	    PersonalDetailsPage.DateOfBirth();
 	    PersonalDetailsPage.clickMaleButton();
 	    PersonalDetailsPage.clickSave();
 

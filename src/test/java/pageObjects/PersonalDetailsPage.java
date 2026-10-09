@@ -1,14 +1,10 @@
 package pageObjects;
 
-import java.time.Duration;
-
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class PersonalDetailsPage extends BasePage {
 
@@ -58,15 +54,22 @@ public class PersonalDetailsPage extends BasePage {
     
     @FindBy(xpath="//a[normalize-space()='Logout']")
     WebElement clklogout;
+    
+    @FindBy(xpath="(//input[@placeholder='yyyy-dd-mm'])[2]")
+    WebElement dob;
+    
+    
     // ===========================
     // ACTION METHODS
     // ===========================
 
     public void editMiddleName(String mname) {
+    	waitutil.invisibility(By.className("oxd-loading-spinner"));
 
-    	waitutil.visibility(By.xpath("//input[@name='middleName']"));
-    	 waitutil.invisibility(By.className("oxd-loading-spinner"));
-    	mdlname.click();
+    	/*WebElement mdl=waitutil.visibility(By.xpath("//input[@name='middleName']"));
+    	 
+    	waitutil.clickable(mdl);
+    	mdl.click(); */
     	
     	mdlname.sendKeys(Keys.CONTROL + "a");
     	mdlname.sendKeys(Keys.DELETE);
@@ -77,9 +80,9 @@ public class PersonalDetailsPage extends BasePage {
     
     public void enterLicenceDate() {
     	waitutil.invisibility(By.className("oxd-loading-spinner"));
-    	waitutil.clickable(licenceDate);
+    	/*waitutil.clickable(licenceDate);
 
-    	licenceDate.click();
+    	licenceDate.click();*/
     	licenceDate.sendKeys(Keys.CONTROL + "a");
     	licenceDate.sendKeys(Keys.DELETE);
     	licenceDate.sendKeys("2026-03-28");
@@ -101,30 +104,35 @@ public class PersonalDetailsPage extends BasePage {
 
         statusbtn.click();
 
-        driver.findElement(
-            By.xpath("//div[@role='option'][normalize-space()='" + status + "']")
-        ).click();
+       WebElement maritalOption= driver.findElement(
+            By.xpath("//div[@role='option'][normalize-space()='" + status + "']"));
+    waitutil.clickable(maritalOption);
+    maritalOption.click();
+    }
+    
+    public void DateOfBirth()
+    {
+    	dob.sendKeys("2000-28-03");
     }
     public void clickMaleButton() {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+       
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(
-                By.className("oxd-form-loader")));
+       waitutil.invisibility( By.className("oxd-form-loader"));
+               
 
-        wait.until(ExpectedConditions.elementToBeClickable(malebtn));
+       WebElement mle=waitutil.clickable(By.xpath("//label[normalize-space()='Male']"));
 
-        malebtn.click();
+        mle.click();
     }
 
     public void clickSave() {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+       
 
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(
-                By.className("oxd-loading-spinner")));
+        waitutil.invisibility( By.className("oxd-form-loader"));       
 
-        wait.until(ExpectedConditions.elementToBeClickable(savebtn));
+        waitutil.clickable(savebtn);
 
         savebtn.click();
     }
@@ -143,9 +151,9 @@ public class PersonalDetailsPage extends BasePage {
 
     public void clickFinalSaveButton() {
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+      
 
-        wait.until(ExpectedConditions.elementToBeClickable(save2btn));
+      waitutil.clickable(save2btn); 
 
         save2btn.click();
     }

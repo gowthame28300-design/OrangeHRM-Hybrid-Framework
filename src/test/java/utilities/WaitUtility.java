@@ -23,8 +23,8 @@ public class WaitUtility {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
     }
 
-    public boolean invisibility(By locator) {
-        return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+    public void invisibility(By locator) {
+         wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
     }
 
     public WebElement clickable(By locator) {

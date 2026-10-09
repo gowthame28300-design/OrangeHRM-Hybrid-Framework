@@ -1,5 +1,6 @@
 package pageObjects;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -58,6 +59,9 @@ public class EmployeeListPage extends BasePage {
 	
 	public void ClickLastNameButton()
 	{
-		lastName.click();
+		WebElement savebtn=waitutil.clickable(By.xpath("//div[normalize-space()='E']"));
+		savebtn.click();
+		
 	}
+	
 }

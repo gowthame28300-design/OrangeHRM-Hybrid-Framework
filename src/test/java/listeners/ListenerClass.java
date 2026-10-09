@@ -21,7 +21,7 @@ public class ListenerClass implements ITestListener {
     // Thread-safe ExtentTest
     private static ThreadLocal<ExtentTest> test = new ThreadLocal<>();
 
-    ExtentReportManager reportManager = new ExtentReportManager();
+   
 
     @Override
     public void onStart(ITestContext context) {

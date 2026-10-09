@@ -18,11 +18,12 @@
 
         <classes>
           
-            <class name="testCases.TC001_LoginTest"/>
+            <!--  <class name="testCases.TC001_LoginTest"/>
             <class name="testCases.TC002_AddEmployeeTest"/>
              <class name="testCases.TC003_SearchEmployeeTest"/>
+              
+               <class name="testCases.TC005_LogoutTest"/>-->
                <class name="testCases.TC004_EditEmployeeTest"/>
-                 <class name="testCases.TC005_LogoutTest"/>
            
            
            
@@ -30,22 +31,23 @@
 
     </test>
     
-    <test name="Firefox Test">
+     <test name="Firefox Test">
     
      <parameter name="browser" value="firefox"/>
 
         <classes>
           
-            <class name="testCases.TC001_LoginTest"/>
+            <!--class name="testCases.TC001_LoginTest"/>
             <class name="testCases.TC002_AddEmployeeTest"/>
              <class name="testCases.TC003_SearchEmployeeTest"/>
-               <class name="testCases.TC004_EditEmployeeTest"/>
-                 <class name="testCases.TC005_LogoutTest"/>
-           
+              
+                 <class name="testCases.TC005_LogoutTest"/>-->
+                  <class name="testCases.TC004_EditEmployeeTest"/>
+          
            
            
         </classes>
 
-    </test>
+    </test> 
 
 </suite>

@@ -10,12 +10,14 @@ public class EmployeeHelper {
 	
 	
 	private final WebDriver driver;
+	private EmployeeListPage employeelistPage;
 	
 	
-    public EmployeeHelper(WebDriver driver)
-    {
-        this.driver = driver;
-    }
+	public EmployeeHelper(WebDriver driver)
+	{
+	    this.driver = driver;
+	    this.employeelistPage = new EmployeeListPage(driver);
+	}
 
     public void openEmployee(String employeeName)
     {
@@ -28,5 +30,10 @@ public class EmployeeHelper {
         employeelistPage.findNameEmployee(employeeName);
         employeelistPage.search();
         employeelistPage.ClickLastNameButton();
+    }
+        
+        public String getEmployeeLastName()
+    {
+        return employeelistPage.getEmployeeLastName();
     }
 }
