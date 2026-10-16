@@ -5,49 +5,58 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public class EmployeePage extends BasePage{
-	
-	public EmployeePage(WebDriver driver)
-	{
-		super(driver);
-	}
-	@FindBy(name="firstName")
-	WebElement fstname;
+public class EmployeePage extends BasePage {
 
-	@FindBy(name="lastName")
-	WebElement lstname;
+    public EmployeePage(WebDriver driver) {
+        super(driver);
+    }
 
-	@FindBy(xpath="(//input[contains(@class,'oxd-input')])[3]")
-	WebElement empid;
+    @FindBy(name = "firstName")
+    WebElement fstname;
 
-	@FindBy(xpath="//button[@type='submit']")
-	WebElement saveBtn;
-	
-	public void enterFirstName(String name)
-	{
-	    fstname.sendKeys(name);
-	}
+    @FindBy(name = "lastName")
+    WebElement lstname;
 
-	public void enterLastName(String name)
-	{
-	    lstname.sendKeys(name);
-	}
+    @FindBy(xpath = "//label[text()='Employee Id']/following::input[1]")
+    WebElement empid;
 
-	public void enterEmpId(String id)
-	{
-	    empid.clear();
-	    empid.sendKeys(id);
-	}
+    @FindBy(xpath = "//button[@type='submit']")
+    WebElement saveBtn;
 
-	public void clickSave()
-	{
-		
-		 waitutil.invisibility(By.className("oxd-loading-spinner"));
-		waitutil.visibility(By.xpath("//button[@type='submit']"));
-	    saveBtn.click();
-	}
+  
+    public void enterFirstName(String name) {
+        fstname.sendKeys(name);
+    }
+
+    public void enterLastName(String name) {
+        lstname.sendKeys(name);
+    }
+
+    public void enterEmpId(String id) {
+        empid.clear();
+        empid.sendKeys(id);
+    }
+    
+    public String generateEmployeeId() {
+        return String.valueOf(
+            1000 + new java.util.Random().nextInt(9000) );
+       
+    }
+    public void clickSave() {
+
+        waitutil.waitForLoaderToDisappear();
+
+        WebElement savebtn = waitutil.clickable(
+            By.xpath("//button[@type='submit']")
+        );
+
+        savebtn.click();
+    }
+            
+       
+    }
+
+    
+
+
 	
-	
-	
-	
-}

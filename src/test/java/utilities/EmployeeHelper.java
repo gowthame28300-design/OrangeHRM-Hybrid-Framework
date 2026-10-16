@@ -5,35 +5,30 @@ import org.openqa.selenium.WebDriver;
 import pageObjects.DashBoardPage;
 import pageObjects.EmployeeListPage;
 
-
 public class EmployeeHelper {
-	
-	
-	private final WebDriver driver;
-	private EmployeeListPage employeelistPage;
-	
-	
-	public EmployeeHelper(WebDriver driver)
-	{
-	    this.driver = driver;
-	    this.employeelistPage = new EmployeeListPage(driver);
-	}
 
-    public void openEmployee(String employeeName)
-    {
+    private final WebDriver driver;
+    private final EmployeeListPage employeeListPage;
+
+    public EmployeeHelper(WebDriver driver) {
+        this.driver = driver;
+        this.employeeListPage = new EmployeeListPage(driver);
+    }
+
+    public void openEmployee(String employeeName) {
         DashBoardPage dashboardPage = new DashBoardPage(driver);
+
         dashboardPage.clickPim();
-
-        EmployeeListPage employeelistPage = new EmployeeListPage(driver);
-
-        employeelistPage.clickEmployeeList();
-        employeelistPage.findNameEmployee(employeeName);
-        employeelistPage.search();
-        employeelistPage.ClickLastNameButton();
+        employeeListPage.clickEmployeeList();
+        employeeListPage.findNameEmployee(employeeName);
+        employeeListPage.search();
+        employeeListPage.EmployeeClick();
     }
-        
-        public String getEmployeeLastName()
-    {
-        return employeelistPage.getEmployeeLastName();
+    public String getEmployeeLastName() {
+        return employeeListPage.getEmployeeLastName();
     }
+    
+    
+    
+  
 }

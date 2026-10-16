@@ -3,21 +3,28 @@ package testCases;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
+import pageObjects.DashBoardPage;
+import pageObjects.EmployeeListPage;
 import testBase.BaseClass;
-import utilities.EmployeeHelper;
 
 public class TC003_SearchEmployeeTest extends BaseClass {
-	@Test
-	
-	public void SearchEmployeeVerify()
-	{
-	    login();
 
-	    EmployeeHelper helper = new EmployeeHelper(getDriver());
+    @Test
+    public void SearchEmployeeVerify() {
+        login();
 
-	    helper.openEmployee(p.getProperty("name"));
+        DashBoardPage dashboardPage = new DashBoardPage(getDriver());
 
-	    Assert.assertEquals(helper.getEmployeeLastName(), "E");
-	}
+        dashboardPage.clickPim();
+        
+        EmployeeListPage  employeeListPage=new EmployeeListPage(getDriver());
 
+        
+        employeeListPage.findNameEmployee(p.getProperty("name"));
+        employeeListPage.search();
+        
+
+        Assert.assertEquals(employeeListPage.getEmployeeLastName() , "Tester");
+        System.out.println(employeeListPage.getEmployeeLastName());
+    }
 }

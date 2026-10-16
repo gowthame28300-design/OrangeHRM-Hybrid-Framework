@@ -187,5 +187,15 @@ public class PersonalDetailsPage extends BasePage {
     	clklogout.click();
     }
 
-  
+    public boolean isPersonalDetailsPageDisplayed() {
+
+        return waitutil.visibility(
+            By.xpath("//h6[normalize-space()='Personal Details']")
+        ).isDisplayed();
+    }
+    public String getEmployeeName() {
+        return waitutil.visibility(
+            By.xpath("//h6[normalize-space()='Gowtham Tester']")
+        ).getText().trim();
+    }
 }

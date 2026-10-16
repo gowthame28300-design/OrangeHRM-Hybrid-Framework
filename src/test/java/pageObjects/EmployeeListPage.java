@@ -1,6 +1,5 @@
 package pageObjects;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -21,10 +20,10 @@ public class EmployeeListPage extends BasePage {
 	@FindBy(xpath="//button[@type='submit']")
 	WebElement searchBtn;
 	
-	@FindBy(xpath="//div[text()='Last Name']/following-sibling::div")
+	@FindBy(xpath="//div[normalize-space()='Gowtham']")
 	WebElement firstName;
 
-	@FindBy(xpath="//div[normalize-space()='E']")
+	@FindBy(xpath="//div[normalize-space()='Tester']")
 	WebElement lastName;
 	
 	
@@ -56,12 +55,11 @@ public class EmployeeListPage extends BasePage {
 	{
 	    return lastName.getText();
 	}
-	
-	public void ClickLastNameButton()
+
+	public void EmployeeClick() 
 	{
-		WebElement savebtn=waitutil.clickable(By.xpath("//div[normalize-space()='E']"));
-		savebtn.click();
-		
+	     firstName.click();
 	}
 	
+	 
 }

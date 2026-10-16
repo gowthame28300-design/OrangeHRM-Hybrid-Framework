@@ -8,6 +8,8 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import testBase.BaseClass;
+
 public class WaitUtility {
 
 	@SuppressWarnings("unused")
@@ -37,5 +39,18 @@ public class WaitUtility {
     public void clickable(WebElement element)
     {
         wait.until(ExpectedConditions.elementToBeClickable(element));
+    }
+    public void waitForLoaderToDisappear() {
+
+        WebDriverWait wait = new WebDriverWait(
+            BaseClass.getDriver(),
+            Duration.ofSeconds(15)
+        );
+
+        wait.until(
+            ExpectedConditions.invisibilityOfElementLocated(
+                By.cssSelector(".oxd-form-loader")
+            )
+        );
     }
 }
