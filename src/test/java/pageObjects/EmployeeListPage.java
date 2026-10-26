@@ -1,65 +1,97 @@
+
 package pageObjects;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
 public class EmployeeListPage extends BasePage {
-	
-	public EmployeeListPage(WebDriver driver)
-	{
+
+	// =========================
+	// LOCATORS
+	// =========================
+
+	private static final By EMPLOYEE_LIST_LINK = By.xpath("//a[normalize-space()='Employee List']");
+
+	private static final By SEARCH_NAME_INPUT = By.xpath("//input[@placeholder='Type for hints...']");
+
+	private static final By SEARCH_BUTTON = By.xpath("//button[@type='submit']");
+
+	private static final By FIRST_NAME = By.xpath("//div[normalize-space()='Gowtham']");
+
+	private static final By LAST_NAME = By.xpath("//div[normalize-space()='Tester']");
+
+	private String employeeName;
+
+	// =========================
+	// CONSTRUCTOR
+	// =========================
+
+	public EmployeeListPage(WebDriver driver) {
 		super(driver);
 	}
-	
-	@FindBy(xpath="//a[text()='Employee List']")
-	WebElement empList;
-	 
-	@FindBy(xpath="//input[@placeholder='Type for hints...']")
-	WebElement searchName;
-	
-	@FindBy(xpath="//button[@type='submit']")
-	WebElement searchBtn;
-	
-	@FindBy(xpath="//div[normalize-space()='Gowtham']")
-	WebElement firstName;
 
-	@FindBy(xpath="//div[normalize-space()='Tester']")
-	WebElement lastName;
-	
-	
-	
-	
-	
-	
-	public void clickEmployeeList()
-	{
-	    empList.click();
+	// =========================
+	// ACTION METHODS
+	// =========================
+
+	// Open Employee List
+	public void clickEmployeeList() {
+
+		waitutil.clickable(EMPLOYEE_LIST_LINK).click();
 	}
 
-	public void findNameEmployee(String name)
-	{
-	    searchName.sendKeys(name);
+	// Enter employee name in the search field
+	public void findNameEmployee(String name) {
+
+		if (name == null || name.isBlank()) {
+			throw new IllegalArgumentException("Employee name cannot be empty.");
+		}
+
+		employeeName = name.trim();
+
+		WebElement searchField = waitutil.visibility(SEARCH_NAME_INPUT);
+
+		searchField.clear();
+		searchField.sendKeys(employeeName);
 	}
 
-	public void search()
-	{
-	    searchBtn.click();
+	// Click Search
+	public void search() {
+
+		waitutil.clickable(SEARCH_BUTTON).click();
 	}
 
-	public String getEmployeeFirstName() 
-	{
-	    return firstName.getText();
-	}
-	
-	public String getEmployeeLastName() 
-	{
-	    return lastName.getText();
+	// Select the employee from search results
+
+	public void EmployeeClick() {
+
+		if (employeeName == null || employeeName.isBlank()) {
+			throw new IllegalStateException("Search for an employee before clicking a result.");
+		}
+
+		String[] names = employeeName.trim().split("\\s+");
+		String lastName = names[names.length - 1];
+
+		By employeeResult = By.xpath("//div[@role='row' and contains(@class,'oxd-table-row')]"
+				+ "[.//div[normalize-space()='" + lastName + "']]");
+
+		waitutil.clickable(employeeResult).click();
 	}
 
-	public void EmployeeClick() 
-	{
-	     firstName.click();
+	// =========================
+	// VERIFICATION METHODS
+	// =========================
+
+	// Read employee first name
+	public String getEmployeeFirstName() {
+
+		return waitutil.visibility(FIRST_NAME).getText().trim();
 	}
-	
-	 
+
+	// Read employee last name
+	public String getEmployeeLastName() {
+
+		return waitutil.visibility(LAST_NAME).getText().trim();
+	}
 }

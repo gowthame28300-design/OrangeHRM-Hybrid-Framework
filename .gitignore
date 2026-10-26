@@ -3,11 +3,16 @@ target/
 
 # Test Reports
 test-output/
+ExtentReport.html
 
 # Eclipse
 .classpath
 .project
 .settings/
+
+# IntelliJ
+.idea/
+*.iml
 
 # Logs
 logs/
@@ -19,3 +24,6 @@ Screenshots/
 # OS Files
 .DS_Store
 Thumbs.db
+
+# Local configuration containing credentials
+config.properties

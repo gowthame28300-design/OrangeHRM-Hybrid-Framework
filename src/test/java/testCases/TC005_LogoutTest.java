@@ -11,8 +11,8 @@ public class TC005_LogoutTest extends BaseClass{
 	{
 		login();
 		PersonalDetailsPage PersonalDetailsPage=new PersonalDetailsPage(getDriver());
-		PersonalDetailsPage.ClickmenuButton();
-		PersonalDetailsPage.ClickLogout();
+		PersonalDetailsPage.clickMenuButton();
+		PersonalDetailsPage.clickLogout();
 	}
 
 }

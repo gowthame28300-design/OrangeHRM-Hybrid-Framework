@@ -1,92 +1,165 @@
+
 package testBase;
 
 import java.io.FileInputStream;
+import java.io.IOException;
+import java.time.Duration;
+import java.util.Locale;
+import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import java.io.IOException;
-import java.time.Duration;
-import java.util.Properties;
-
+import org.openqa.selenium.By;
+import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
+import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.testng.annotations.Parameters;
+import org.openqa.selenium.firefox.FirefoxOptions;
+import org.openqa.selenium.TimeoutException;
 import org.testng.annotations.AfterClass;
 import org.testng.annotations.BeforeClass;
+import org.testng.annotations.Parameters;
 
 import pageObjects.LoginPage;
 import utilities.WaitUtility;
 
 public class BaseClass {
 
-	// public static WebDriver driver;
-	private static ThreadLocal<WebDriver> driver = new ThreadLocal<>();
-	public WaitUtility waitutil;
-	public Properties p;
-	public Logger logger;
+    private static final ThreadLocal<WebDriver> driver =
+            new ThreadLocal<>();
 
-	public static void setDriver(WebDriver driverInstance) {
-		driver.set(driverInstance);
-	}
+    protected WaitUtility waitutil;
+    protected Properties p;
+    protected Logger logger;
 
-	public static void setDriver(ThreadLocal<WebDriver> driver) {
-		BaseClass.driver = driver;
-	}
+    // Store the WebDriver for the current thread
+    public static void setDriver(WebDriver driverInstance) {
+        driver.set(driverInstance);
+    }
 
-	public static WebDriver getDriver() {
-		return driver.get();
-	}
+    // Retrieve the WebDriver for the current thread
+    public static WebDriver getDriver() {
+        return driver.get();
+    }
 
-	@BeforeClass
-	@Parameters("browser")
-	public void setup(String browser) throws IOException {
+    // Initialize browser and application
+    @BeforeClass
+    @Parameters("browser")
+    public void setup(String browser) throws IOException {
 
-		p = new Properties();
+        logger = LogManager.getLogger(getClass());
 
-		FileInputStream file = new FileInputStream(
-				System.getProperty("user.dir") + "/src/test/resources/config.properties");
-		p.load(file);
+        loadProperties();
+        initializeBrowser(browser);
 
-		logger = LogManager.getLogger(this.getClass());
+        WebDriver webDriver = getDriver();
 
-		if (browser.equalsIgnoreCase("chrome")) {
-			setDriver(new ChromeDriver());
-		} else if (browser.equalsIgnoreCase("edge")) {
-			setDriver(new EdgeDriver());
-		} else if (browser.equalsIgnoreCase("firefox")) {
-			setDriver(new FirefoxDriver());
-		} else {
-			throw new IllegalArgumentException("Invalid browser: " + browser);
-		}
-		waitutil = new WaitUtility(getDriver());
+        webDriver.manage().timeouts()
+                .pageLoadTimeout(Duration.ofSeconds(30));
 
-		getDriver().get(p.getProperty("appURL"));
+        webDriver.manage().timeouts()
+                .implicitlyWait(Duration.ZERO);
 
-		getDriver().manage().window().maximize();
+        webDriver.manage().window().maximize();
 
-		getDriver().manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        try {
+            webDriver.get(p.getProperty("appURL"));
+        } catch (TimeoutException e) {
+            logger.warn("Page load timed out. Current URL: {}",
+                    webDriver.getCurrentUrl());
+        }
 
-		logger.info("Browser launched successfully");
-		p.load(file);
-		file.close();
-	}
+        waitutil = new WaitUtility(webDriver);
 
-	public void login() {
-		LoginPage loginPage = new LoginPage(getDriver());
-		loginPage.username(p.getProperty("username"));
-		loginPage.password(p.getProperty("password"));
-		loginPage.login();
-		logger.info("Logging into OrangeHRM");
-	}
+        waitutil.visibility(By.name("username"));
 
-	@AfterClass
-	public void teardown() {
-		if (getDriver() != null	) {
-			getDriver().quit();
-			driver.remove();
-		}
-		logger.info("Browser closed");
-	}
+        logger.info("OrangeHRM application opened successfully.");
+    }
+
+    // Load application configuration
+    private void loadProperties() throws IOException {
+
+        p = new Properties();
+
+        String configPath = System.getProperty("user.dir")
+                + "/src/test/resources/config.properties";
+
+        try (FileInputStream file = new FileInputStream(configPath)) {
+            p.load(file);
+        }
+
+        if (p.getProperty("appURL") == null
+                || p.getProperty("appURL").isBlank()) {
+            throw new IllegalStateException(
+                    "appURL is missing from config.properties");
+        }
+    }
+
+    // Initialize the selected browser
+    private void initializeBrowser(String browser) {
+
+        WebDriver webDriver;
+
+        switch (browser.toLowerCase(Locale.ROOT)) {
+
+        case "chrome":
+            ChromeOptions chromeOptions = new ChromeOptions();
+            chromeOptions.setPageLoadStrategy(PageLoadStrategy.EAGER);
+            webDriver = new ChromeDriver(chromeOptions);
+            break;
+
+        case "firefox":
+            FirefoxOptions firefoxOptions = new FirefoxOptions();
+            firefoxOptions.setPageLoadStrategy(PageLoadStrategy.EAGER);
+            webDriver = new FirefoxDriver(firefoxOptions);
+            break;
+
+        case "edge":
+            EdgeOptions edgeOptions = new EdgeOptions();
+            edgeOptions.setPageLoadStrategy(PageLoadStrategy.EAGER);
+            webDriver = new EdgeDriver(edgeOptions);
+            break;
+
+        default:
+            throw new IllegalArgumentException(
+                    "Unsupported browser: " + browser);
+        }
+
+        setDriver(webDriver);
+        logger.info("{} browser initialized successfully.", browser);
+    }
+
+    // Login to OrangeHRM
+    public void login() {
+
+        LoginPage loginPage = new LoginPage(getDriver());
+
+        loginPage.enterUsername(p.getProperty("username"));
+        loginPage.enterPassword(p.getProperty("password"));
+        loginPage.clickLogin();
+
+        logger.info("Login steps completed.");
+    }
+
+    // Close browser and clean up the current thread
+    @AfterClass(alwaysRun = true)
+    public void teardown() {
+
+        WebDriver webDriver = getDriver();
+
+        try {
+            if (webDriver != null) {
+                webDriver.quit();
+                logger.info("Browser closed successfully.");
+            }
+        } catch (Exception e) {
+            logger.error("Error while closing browser.", e);
+        } finally {
+            driver.remove();
+        }
+    }
 }
+

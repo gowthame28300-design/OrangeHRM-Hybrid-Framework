@@ -5,34 +5,36 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public class LoginPage extends BasePage {
-	
-	public LoginPage(WebDriver driver)
-	{
+
+	public LoginPage(WebDriver driver) {
 		super(driver);
 	}
-	
-	@FindBy(xpath="//input[@placeholder='Username']")
-	WebElement usr;
-	
-	@FindBy(xpath="//input[@name='password']")
-	WebElement pwd;
-	
-	@FindBy(xpath="//button[@type='submit']")
-	WebElement btn;
-	
-	
-	public void username(String usrname)
-	{
-		usr.sendKeys(usrname);
-	}
-	public void password(String passwd)
-	{
-		pwd.sendKeys(passwd);
-	}
-	public void login()
-	{
-		btn.click();
-	}
-	
 
+	// =========================
+	// LOCATORS
+	// =========================
+
+	@FindBy(xpath = "//input[@placeholder='Username']")
+	private WebElement usernameField;
+
+	@FindBy(xpath = "//input[@name='password']")
+	private WebElement passwordField;
+
+	@FindBy(xpath = "//button[@type='submit']")
+	private WebElement loginButton;
+
+	// =========================
+	// ACTION METHODS
+	// =========================
+	public void enterUsername(String username) {
+		usernameField.sendKeys(username);
+	}
+
+	public void enterPassword(String password) {
+		passwordField.sendKeys(password);
+	}
+
+	public void clickLogin() {
+		loginButton.click();
+	}
 }

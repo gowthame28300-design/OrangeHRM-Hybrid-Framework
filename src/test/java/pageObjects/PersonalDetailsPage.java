@@ -1,201 +1,240 @@
+
 package pageObjects;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
+import org.testng.Assert;
 
 public class PersonalDetailsPage extends BasePage {
 
-    public PersonalDetailsPage(WebDriver driver) {
-        super(driver);
-       
-    }
+	public PersonalDetailsPage(WebDriver driver) {
+		super(driver);
+	}
 
-    // Middle Name
-    @FindBy(xpath = "//input[@name='middleName']")
-    WebElement mdlname;
-    
-    @FindBy(xpath="(//div[@class='oxd-select-text-input'])[1]")
-    WebElement nationalityValue;
-    
-    @FindBy(xpath="//label[normalize-space()='Marital Status']/ancestor::div[contains(@class,'oxd-input-group')]//div[contains(@class,'oxd-select-text')]")
-    WebElement statusbtn;
-    
-   
+	// =========================
+	// LOCATORS
+	// =========================
 
-    
-    @FindBy(xpath="(//input[@placeholder='yyyy-dd-mm'])[1]")
-    WebElement licenceDate;
+	private static final By LOADING_SPINNER = By.className("oxd-loading-spinner");
 
-   
-    
+	private static final By FORM_LOADER = By.className("oxd-form-loader");
 
-    // Male Radio Button
-    @FindBy(xpath = "//label[normalize-space()='Male']")
-    WebElement malebtn;
+	private static final By PERSONAL_DETAILS_HEADING = By.xpath("//h6[normalize-space()='Personal Details']");
 
-    // First Save Button
-    @FindBy(xpath = "//button[@type='submit'][normalize-space()='Save']")
-    WebElement savebtn;
+	private static final By MALE_RADIO_BUTTON = By.xpath("//label[normalize-space()='Male']");
 
-    // Blood Type Dropdown
-    @FindBy(xpath = "//label[normalize-space()='Blood Type']/following::div[contains(@class,'oxd-select-text')][1]")
-    WebElement bloodTypeDropdown;
-    
+	private static final By MIDDLE_NAME_FIELD = By.xpath("//input[@name='middleName']");
 
-    // Second Save Button (Custom Fields)
-    @FindBy(xpath = "//div[@class='orangehrm-custom-fields']//button[@type='submit']")
-    WebElement save2btn;
+	private static final By SAVE_BUTTON = By.xpath("//button[@type='submit'][normalize-space()='Save']");
 
-    @FindBy(xpath = "//img[@class='oxd-userdropdown-img']")
-    WebElement clkmenubtn;
-    
-    @FindBy(xpath="//a[normalize-space()='Logout']")
-    WebElement clklogout;
-    
-    @FindBy(xpath="(//input[@placeholder='yyyy-dd-mm'])[2]")
-    WebElement dob;
-    
-    
-    // ===========================
-    // ACTION METHODS
-    // ===========================
+	private static final By NATIONALITY_DROPDOWN = By.xpath("(//div[@class='oxd-select-text-input'])[1]");
 
-    public void editMiddleName(String mname) {
-    	waitutil.invisibility(By.className("oxd-loading-spinner"));
+	private static final By MARITAL_STATUS_DROPDOWN = By.xpath("//label[normalize-space()='Marital Status']"
+			+ "/ancestor::div[contains(@class,'oxd-input-group')]" + "//div[contains(@class,'oxd-select-text')]");
 
-    	/*WebElement mdl=waitutil.visibility(By.xpath("//input[@name='middleName']"));
-    	 
-    	waitutil.clickable(mdl);
-    	mdl.click(); */
-    	
-    	mdlname.sendKeys(Keys.CONTROL + "a");
-    	mdlname.sendKeys(Keys.DELETE);
-    	
-    	mdlname.sendKeys(mname);
-        
-    }
-    
-    public void enterLicenceDate() {
-    	waitutil.invisibility(By.className("oxd-loading-spinner"));
-    	/*waitutil.clickable(licenceDate);
+	private static final By LICENSE_EXPIRY_DATE_FIELD = By.xpath("//label[normalize-space()='License Expiry Date']"
+			+ "/ancestor::div[contains(@class,'oxd-input-group')]//input");
 
-    	licenceDate.click();*/
-    	licenceDate.sendKeys(Keys.CONTROL + "a");
-    	licenceDate.sendKeys(Keys.DELETE);
-    	licenceDate.sendKeys("2026-03-28");
-    }
-    
-    public void clickNationalityButton(String nationality) {
+	private static final By BLOOD_TYPE_DROPDOWN = By.xpath(
+			"//label[normalize-space()='Blood Type']" + "/following::div[contains(@class,'oxd-select-text')][1]");
 
-        waitutil.invisibility(By.className("oxd-loading-spinner"));
+	private static final By FINAL_SAVE_BUTTON = By
+			.xpath("//div[@class='orangehrm-custom-fields']" + "//button[@type='submit']");
 
-        nationalityValue.click();
+	private static final By USER_MENU_BUTTON = By.xpath("//img[@class='oxd-userdropdown-img']");
 
-        driver.findElement(
-            By.xpath("//span[normalize-space()='" + nationality + "']")
-        ).click();
-    }
+	private static final By LOGOUT_BUTTON = By.xpath("//a[normalize-space()='Logout']");
 
-    public void selectMaritalStatus(String status) {
-    	waitutil.invisibility(By.className("oxd-loading-spinner"));
+	private static final By DATE_OF_BIRTH_FIELD = By.xpath(
+			"//label[normalize-space()='Date of Birth']" + "/ancestor::div[contains(@class,'oxd-input-group')]//input");
 
-        statusbtn.click();
+	private static final By EMPLOYEE_NAME = By.xpath("//div[contains(@class,'orangehrm-edit-employee-name')]//h6");
 
-       WebElement maritalOption= driver.findElement(
-            By.xpath("//div[@role='option'][normalize-space()='" + status + "']"));
-    waitutil.clickable(maritalOption);
-    maritalOption.click();
-    }
-    
-    public void DateOfBirth()
-    {
-    	dob.sendKeys("2000-28-03");
-    }
-    public void clickMaleButton() {
+	// =========================
+	// ACTION METHODS
+	// =========================
 
-       
+	// Edit middle name
+	public void editMiddleName(String middleName) {
 
-       waitutil.invisibility( By.className("oxd-form-loader"));
-               
+		waitutil.visibility(MIDDLE_NAME_FIELD);
+		waitutil.invisibility(FORM_LOADER);
 
-       WebElement mle=waitutil.clickable(By.xpath("//label[normalize-space()='Male']"));
+		WebElement field = waitutil.clickable(MIDDLE_NAME_FIELD);
 
-        mle.click();
-    }
+		field.sendKeys(Keys.CONTROL, "a");
+		field.sendKeys(Keys.BACK_SPACE);
+		field.sendKeys(middleName);
 
-    public void clickSave() {
+		Assert.assertEquals(field.getAttribute("value"), middleName, "Middle name was not entered correctly.");
+	}
 
-       
+	// Enter license expiry date
+	public void enterLicenseExpiryDate(String date) {
 
-        waitutil.invisibility( By.className("oxd-form-loader"));       
+		waitutil.invisibility(LOADING_SPINNER);
 
-        waitutil.clickable(savebtn);
+		WebElement field = waitutil.clickable(LICENSE_EXPIRY_DATE_FIELD);
 
-        savebtn.click();
-    }
+		field.sendKeys(Keys.CONTROL, "a");
+		field.sendKeys(Keys.BACK_SPACE);
+		field.sendKeys(date);
+	}
 
-    public void selectBloodType(String bloodType) {
+	// Select nationality
+	public void selectNationality(String nationality) {
 
-       waitutil.invisibility(By.className("oxd-loading-spinner"));
-                
+		waitutil.invisibility(LOADING_SPINNER);
+		waitutil.clickable(NATIONALITY_DROPDOWN).click();
 
-        bloodTypeDropdown.click();
+		By option = By.xpath("//span[normalize-space()='" + nationality + "']");
 
-        driver.findElement(
-                By.xpath("//span[normalize-space()='" + bloodType + "']"))
-                .click();
-    }
+		waitutil.clickable(option).click();
+	}
 
-    public void clickFinalSaveButton() {
+	// Select marital status
+	public void selectMaritalStatus(String status) {
 
-      
+		waitutil.invisibility(LOADING_SPINNER);
+		waitutil.clickable(MARITAL_STATUS_DROPDOWN).click();
 
-      waitutil.clickable(save2btn); 
+		By option = By.xpath("//div[@role='option'][normalize-space()='" + status + "']");
 
-        save2btn.click();
-    }
+		waitutil.clickable(option).click();
+	}
 
-    // ===========================
-    // VERIFICATION METHODS
-    // ===========================
+	// Enter date of birth
+	public void enterDateOfBirth(String date) {
 
-    public String getMiddleName() {
-        return mdlname.getAttribute("value");
-    }
+		waitutil.invisibility(LOADING_SPINNER);
 
-    public String getBloodType() {
-        return bloodTypeDropdown.getText();
-    }
-    
-    public String getNationalityOption() {
-        return nationalityValue.getText().trim();
-    }
-    
-    public String getMaritualStatus() {
-        return statusbtn.getText().trim();
-    }
-    public void ClickmenuButton()
-    {
-    	clkmenubtn.click();
-    }
-    
-    public void ClickLogout()
-    {
-    	clklogout.click();
-    }
+		WebElement field = waitutil.clickable(DATE_OF_BIRTH_FIELD);
 
-    public boolean isPersonalDetailsPageDisplayed() {
+		field.sendKeys(Keys.CONTROL, "a");
+		field.sendKeys(Keys.BACK_SPACE);
+		field.sendKeys(date);
+	}
 
-        return waitutil.visibility(
-            By.xpath("//h6[normalize-space()='Personal Details']")
-        ).isDisplayed();
-    }
-    public String getEmployeeName() {
-        return waitutil.visibility(
-            By.xpath("//h6[normalize-space()='Gowtham Tester']")
-        ).getText().trim();
-    }
+	// Select Male
+	public void clickMaleButton() {
+
+		waitutil.invisibility(FORM_LOADER);
+		waitutil.clickable(MALE_RADIO_BUTTON).click();
+	}
+
+	// Click Save
+	public void clickSave() {
+
+		waitutil.invisibility(FORM_LOADER);
+		waitutil.clickable(SAVE_BUTTON).click();
+	}
+
+	// Select blood type
+	public void selectBloodType(String bloodType) {
+
+		waitutil.invisibility(LOADING_SPINNER);
+		waitutil.clickable(BLOOD_TYPE_DROPDOWN).click();
+
+		By option = By.xpath("//span[normalize-space()='" + bloodType + "']");
+
+		waitutil.clickable(option).click();
+	}
+
+	// Click custom-fields Save button
+	public void clickFinalSaveButton() {
+
+		waitutil.invisibility(FORM_LOADER);
+		waitutil.clickable(FINAL_SAVE_BUTTON).click();
+	}
+
+	// Open user menu
+	public void clickMenuButton() {
+
+		waitutil.clickable(USER_MENU_BUTTON).click();
+	}
+
+	// Click Logout
+	public void clickLogout() {
+
+		waitutil.clickable(LOGOUT_BUTTON).click();
+	}
+
+	// Refresh page and wait for it to load
+	public void refreshPage() {
+
+		driver.navigate().refresh();
+
+		waitutil.visibility(PERSONAL_DETAILS_HEADING);
+		waitutil.invisibility(LOADING_SPINNER);
+		waitutil.invisibility(FORM_LOADER);
+	}
+
+	// =========================
+	// VERIFICATION METHODS
+	// =========================
+
+	// Read middle name
+	public String getMiddleName() {
+
+		return waitutil.visibility(MIDDLE_NAME_FIELD).getAttribute("value").trim();
+	}
+
+	// Check whether middle-name field is displayed
+	public boolean isMiddleNameFieldDisplayed() {
+
+		try {
+			return waitutil.visibility(MIDDLE_NAME_FIELD).isDisplayed();
+		} catch (TimeoutException e) {
+			return false;
+		}
+	}
+
+	// Check whether Save button is displayed
+	public boolean isSaveButtonDisplayed() {
+
+		try {
+			return waitutil.visibility(SAVE_BUTTON).isDisplayed();
+		} catch (TimeoutException e) {
+			return false;
+		}
+	}
+
+	// Check whether Personal Details page is displayed
+	public boolean isPersonalDetailsPageDisplayed() {
+
+		try {
+			return waitutil.visibility(PERSONAL_DETAILS_HEADING).isDisplayed();
+		} catch (TimeoutException e) {
+			return false;
+		}
+	}
+
+	// Read blood type
+	public String getBloodType() {
+
+		return waitutil.visibility(BLOOD_TYPE_DROPDOWN).getText().trim();
+	}
+
+	// Read nationality
+	public String getNationality() {
+
+		return waitutil.visibility(NATIONALITY_DROPDOWN).getText().trim();
+	}
+
+	// Read marital status
+	public String getMaritalStatus() {
+
+		return waitutil.visibility(MARITAL_STATUS_DROPDOWN).getText().trim();
+	}
+
+	// Read employee name
+	public String getEmployeeName() {
+
+		waitutil.invisibility(LOADING_SPINNER);
+
+		return waitutil.visibility(EMPLOYEE_NAME).getText().trim();
+	}
 }

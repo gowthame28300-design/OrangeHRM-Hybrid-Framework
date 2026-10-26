@@ -1,21 +1,23 @@
 package pageObjects;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
-public class PimPage extends BasePage{
-	
-	public PimPage(WebDriver driver)
-	{
+public class PimPage extends BasePage {
+
+	// =========================
+	// LOCATOR
+	// =========================
+	private static final By ADD_BUTTON = By.xpath("//button[normalize-space()='Add']");
+
+	public PimPage(WebDriver driver) {
 		super(driver);
 	}
-	
-	@FindBy(xpath="//button[normalize-space()='Add']")
-	WebElement addBtn;
 
-	public void clickAdd()
-	{
-	    addBtn.click();
+	// =========================
+	// ACTION METHOD
+	// =========================
+	public void clickAdd() {
+		waitutil.clickable(ADD_BUTTON).click();
 	}
 }

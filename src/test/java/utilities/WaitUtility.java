@@ -8,49 +8,50 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import testBase.BaseClass;
-
 public class WaitUtility {
 
-	@SuppressWarnings("unused")
 	private final WebDriver driver;
 	private final WebDriverWait wait;
 
-    public WaitUtility(WebDriver driver) {
-        this.driver = driver;
-        wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-    }
+	private static final By LOADER = By.cssSelector(".oxd-form-loader");
 
-    public WebElement visibility(By locator) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-    }
+	public WaitUtility(WebDriver driver) {
+		this.driver = driver;
+		this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+	}
 
-    public void invisibility(By locator) {
-         wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
-    }
+	// Wait until an element is visible
+	public WebElement visibility(By locator) {
+		return wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+	}
 
-    public WebElement clickable(By locator) {
-        return wait.until(ExpectedConditions.elementToBeClickable(locator));
-    }
-    
-    public WebElement presence(By locator) {
-        return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
-    }
-    public void clickable(WebElement element)
-    {
-        wait.until(ExpectedConditions.elementToBeClickable(element));
-    }
-    public void waitForLoaderToDisappear() {
+	public WebElement visibility(WebElement locator) {
+		return wait.until(ExpectedConditions.visibilityOf(locator));
+	}
 
-        WebDriverWait wait = new WebDriverWait(
-            BaseClass.getDriver(),
-            Duration.ofSeconds(15)
-        );
+	// Wait until an element disappears
+	public boolean invisibility(By locator) {
+		return wait.until(ExpectedConditions.invisibilityOfElementLocated(locator));
+	}
 
-        wait.until(
-            ExpectedConditions.invisibilityOfElementLocated(
-                By.cssSelector(".oxd-form-loader")
-            )
-        );
-    }
+	// Wait until an element is clickable
+	public WebElement clickable(By locator) {
+		return wait.until(ExpectedConditions.elementToBeClickable(locator));
+	}
+
+	// Wait until an element is present in the DOM
+	public WebElement presence(By locator) {
+		return wait.until(ExpectedConditions.presenceOfElementLocated(locator));
+	}
+
+	// Wait until a specific WebElement is clickable
+	public WebElement clickable(WebElement element) {
+		return wait.until(ExpectedConditions.elementToBeClickable(element));
+	}
+
+	// Wait until the OrangeHRM form loader disappears
+	public boolean waitForLoaderToDisappear() {
+		return new WebDriverWait(driver, Duration.ofSeconds(15))
+				.until(ExpectedConditions.invisibilityOfElementLocated(LOADER));
+	}
 }

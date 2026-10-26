@@ -1,5 +1,7 @@
 package pageObjects;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -7,56 +9,61 @@ import org.openqa.selenium.support.FindBy;
 
 public class EmployeePage extends BasePage {
 
-    public EmployeePage(WebDriver driver) {
-        super(driver);
-    }
+	public EmployeePage(WebDriver driver) {
+		super(driver);
+	}
 
-    @FindBy(name = "firstName")
-    WebElement fstname;
+	// =========================
+	// LOCATORS
+	// =========================
 
-    @FindBy(name = "lastName")
-    WebElement lstname;
+	private static final By SAVE_BUTTON = By.xpath("//button[@type='submit']");
 
-    @FindBy(xpath = "//label[text()='Employee Id']/following::input[1]")
-    WebElement empid;
+	@FindBy(name = "firstName")
+	private WebElement firstNameField;
 
-    @FindBy(xpath = "//button[@type='submit']")
-    WebElement saveBtn;
+	@FindBy(name = "lastName")
+	private WebElement lastNameField;
 
-  
-    public void enterFirstName(String name) {
-        fstname.sendKeys(name);
-    }
+	@FindBy(xpath = "//label[normalize-space()='Employee Id']/following::input[1]")
+	private WebElement employeeIdField;
 
-    public void enterLastName(String name) {
-        lstname.sendKeys(name);
-    }
+	// =========================
+	// ACTION METHODS
+	// =========================
 
-    public void enterEmpId(String id) {
-        empid.clear();
-        empid.sendKeys(id);
-    }
-    
-    public String generateEmployeeId() {
-        return String.valueOf(
-            1000 + new java.util.Random().nextInt(9000) );
-       
-    }
-    public void clickSave() {
+	// Enter employee first name
+	public void enterFirstName(String firstName) {
+		waitutil.visibility(By.name("firstName"));
+		firstNameField.clear();
+		firstNameField.sendKeys(firstName);
+	}
 
-        waitutil.waitForLoaderToDisappear();
+	// Enter employee last name
+	public void enterLastName(String lastName) {
+		waitutil.visibility(By.name("lastName"));
+		lastNameField.clear();
+		lastNameField.sendKeys(lastName);
+	}
 
-        WebElement savebtn = waitutil.clickable(
-            By.xpath("//button[@type='submit']")
-        );
+	// Enter employee ID
+	public void enterEmpId(String employeeId) {
+		waitutil.visibility(employeeIdField);
 
-        savebtn.click();
-    }
-            
-       
-    }
+		employeeIdField.clear();
+		employeeIdField.sendKeys(employeeId);
+	}
 
-    
+	// Generate a random four-digit employee ID
+	public String generateEmployeeId() {
+		return String.valueOf(ThreadLocalRandom.current().nextInt(1000, 10000));
+	}
 
+	// Save employee details
+	public void clickSave() {
 
-	
+		waitutil.waitForLoaderToDisappear();
+
+		waitutil.clickable(SAVE_BUTTON).click();
+	}
+}

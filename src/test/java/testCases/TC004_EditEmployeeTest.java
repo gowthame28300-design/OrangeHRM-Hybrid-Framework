@@ -1,3 +1,4 @@
+
 package testCases;
 
 import org.testng.Assert;
@@ -7,31 +8,43 @@ import pageObjects.PersonalDetailsPage;
 import testBase.BaseClass;
 import utilities.EmployeeHelper;
 
-public class TC004_EditEmployeeTest extends BaseClass{
-	@Test
-	public void EditEmployeeVerify()
-	{
-	    login();
+public class TC004_EditEmployeeTest extends BaseClass {
 
-	    EmployeeHelper employeeHelper = new EmployeeHelper(getDriver());
+    @Test
+    public void EditEmployeeVerify() {
 
-	    employeeHelper.openEmployee(p.getProperty("name"));
+        login();
 
-	    PersonalDetailsPage PersonalDetailsPage = new PersonalDetailsPage(getDriver());
+        EmployeeHelper employeeHelper = new EmployeeHelper(getDriver());
+        employeeHelper.openEmployee(p.getProperty("name"));
 
-	    PersonalDetailsPage.editMiddleName("Alex");
-	    PersonalDetailsPage.enterLicenceDate();
-	    PersonalDetailsPage.clickNationalityButton("Indian");
-	    PersonalDetailsPage.selectMaritalStatus("Single");
-	    PersonalDetailsPage.DateOfBirth();
-	    PersonalDetailsPage.clickMaleButton();
-	    PersonalDetailsPage.clickSave();
+        PersonalDetailsPage personalDetailsPage =
+                new PersonalDetailsPage(getDriver());
 
-	    Assert.assertEquals(PersonalDetailsPage.getMiddleName(), "Alex");
-	    Assert.assertEquals(PersonalDetailsPage.getMaritualStatus(), "Single");
-	    Assert.assertEquals(PersonalDetailsPage.getNationalityOption(), "Indian");
-	}
-			
-	}
+        personalDetailsPage.editMiddleName("Alex");
+        personalDetailsPage.enterLicenseExpiryDate("2028-12-31");
+        personalDetailsPage.selectNationality("Indian");
+        personalDetailsPage.selectMaritalStatus("Single");
+        personalDetailsPage.clickMaleButton();
+        personalDetailsPage.clickSave();
 
+        Assert.assertEquals(
+                personalDetailsPage.getMiddleName(),
+                "Alex",
+                "Middle name does not match."
+        );
+
+        Assert.assertEquals(
+                personalDetailsPage.getMaritalStatus(),
+                "Single",
+                "Marital status does not match."
+        );
+
+        Assert.assertEquals(
+                personalDetailsPage.getNationality(),
+                "Indian",
+                "Nationality does not match."
+        );
+    }
+}
 

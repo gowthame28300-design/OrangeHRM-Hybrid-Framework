@@ -8,29 +8,29 @@ import testBase.BaseClass;
 import utilities.DataProviders;
 
 public class TC001_LoginTest extends BaseClass {
-	
-	@Test(dataProvider="LoginData",dataProviderClass=DataProviders.class)
-	 
-	public void Login_Verify(String username,String password) throws InterruptedException
-	{
-	try
-	{
-		logger.info("Starting Login Test");
 
-		LoginPage loginPage = new LoginPage(getDriver());
-		loginPage.username(username);
-		logger.info("Entered Username");
+    @Test(dataProvider = "LoginData", dataProviderClass = DataProviders.class)
+    public void loginVerify(String username, String password) {
 
-		loginPage.password(password);
-		logger.info("Entered Password");
-		loginPage.login();
+        logger.info("Starting login test");
 
-		logger.info("Login Successful");
-		Assert.assertEquals(getDriver().getTitle(),"OrangeHRM");
-	}
-	catch(Exception e)
-	{
-		Assert.fail();
-	}
-		
-	}}
+        LoginPage loginPage = new LoginPage(getDriver());
+
+        loginPage.enterUsername(username);
+        logger.info("Entered username");
+
+        loginPage.enterPassword(password);
+        logger.info("Entered password");
+
+        loginPage.clickLogin();
+        logger.info("Clicked Login button");
+
+        Assert.assertEquals(
+                getDriver().getTitle(),
+                "OrangeHRM",
+                "Login verification failed: page title did not match."
+        );
+
+        logger.info("Login test passed");
+    }
+}

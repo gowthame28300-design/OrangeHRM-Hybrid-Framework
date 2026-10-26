@@ -7,28 +7,26 @@ import pageObjects.EmployeeListPage;
 
 public class EmployeeHelper {
 
-    private final WebDriver driver;
-    private final EmployeeListPage employeeListPage;
 
-    public EmployeeHelper(WebDriver driver) {
-        this.driver = driver;
-        this.employeeListPage = new EmployeeListPage(driver);
-    }
+private final WebDriver driver;
 
-    public void openEmployee(String employeeName) {
-        DashBoardPage dashboardPage = new DashBoardPage(driver);
+public EmployeeHelper(WebDriver driver) {
+    this.driver = driver;
+}
 
-        dashboardPage.clickPim();
-        employeeListPage.clickEmployeeList();
-        employeeListPage.findNameEmployee(employeeName);
-        employeeListPage.search();
-        employeeListPage.EmployeeClick();
-    }
-    public String getEmployeeLastName() {
-        return employeeListPage.getEmployeeLastName();
-    }
-    
-    
-    
-  
+public void openEmployee(String employeeName) {
+
+    DashBoardPage dashboardPage = new DashBoardPage(driver);
+    dashboardPage.clickPim();
+
+    EmployeeListPage employeeListPage =
+            new EmployeeListPage(driver);
+
+    employeeListPage.clickEmployeeList();
+    employeeListPage.findNameEmployee(employeeName);
+    employeeListPage.search();
+    employeeListPage.EmployeeClick();
+}
+
+
 }

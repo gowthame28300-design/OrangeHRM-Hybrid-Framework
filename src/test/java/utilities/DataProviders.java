@@ -1,33 +1,38 @@
 package utilities;
 
+import java.nio.file.Paths;
+
 import org.testng.annotations.DataProvider;
 
 public class DataProviders {
-	
-	 @DataProvider(name="LoginData")
-	 public Object[][] getData() throws Exception
-	    
-	    {
-		 String path=".\\TestData\\OrangeHRM.xlsx";
-		   
-		   ExcelUtility xlutil=new ExcelUtility(path);
-		   
-		   int totalrows=xlutil.getRowCount("LoginData");
-		   int totalcol=xlutil.getCellCount("LoginData", totalrows);
-		   
-		 
-		   String logindata[][] =new String[totalrows][totalcol];
-		   
-		   for(int i=1;i<=totalrows;i++)
-		   {
-		       for(int j=0;j<totalcol;j++)
-		       {
-		           logindata[i-1][j] = xlutil.getCellData("LoginData", i, j);
-		       }
-		   }
-		   
-		  
-			return logindata;	   
-	    }
 
+    private static final String SHEET_NAME = "LoginData";
+
+    @DataProvider(name = "LoginData")
+    public Object[][] getLoginData() throws Exception {
+
+        String filePath = Paths.get(
+                System.getProperty("user.dir"),
+                "TestData",
+                "OrangeHRM.xlsx"
+        ).toString();
+
+        ExcelUtility excel = new ExcelUtility(filePath);
+
+        int totalRows = excel.getRowCount(SHEET_NAME);
+        int totalColumns = excel.getCellCount(SHEET_NAME, totalRows);
+
+        Object[][] loginData = new Object[totalRows][totalColumns];
+
+        for (int row = 1; row <= totalRows; row++) {
+
+            for (int column = 0; column < totalColumns; column++) {
+
+                loginData[row - 1][column] =
+                        excel.getCellData(SHEET_NAME, row, column);
+            }
+        }
+
+        return loginData;
+    }
 }

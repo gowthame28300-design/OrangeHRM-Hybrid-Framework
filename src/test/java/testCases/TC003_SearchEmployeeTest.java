@@ -9,22 +9,20 @@ import testBase.BaseClass;
 
 public class TC003_SearchEmployeeTest extends BaseClass {
 
-    @Test
-    public void SearchEmployeeVerify() {
-        login();
+	@Test
+	public void SearchEmployeeVerify() {
+		login();
 
-        DashBoardPage dashboardPage = new DashBoardPage(getDriver());
+		DashBoardPage dashboardPage = new DashBoardPage(getDriver());
 
-        dashboardPage.clickPim();
-        
-        EmployeeListPage  employeeListPage=new EmployeeListPage(getDriver());
+		dashboardPage.clickPim();
 
-        
-        employeeListPage.findNameEmployee(p.getProperty("name"));
-        employeeListPage.search();
-        
+		EmployeeListPage employeeListPage = new EmployeeListPage(getDriver());
 
-        Assert.assertEquals(employeeListPage.getEmployeeLastName() , "Tester");
-        System.out.println(employeeListPage.getEmployeeLastName());
-    }
+		employeeListPage.findNameEmployee(p.getProperty("name"));
+		employeeListPage.search();
+
+		Assert.assertEquals(employeeListPage.getEmployeeLastName(), "Tester");
+		System.out.println(employeeListPage.getEmployeeLastName());
+	}
 }
