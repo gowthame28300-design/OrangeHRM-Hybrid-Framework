@@ -105,11 +105,18 @@ public class BaseClass {
 
         switch (browser.toLowerCase(Locale.ROOT)) {
 
+        
         case "chrome":
+
             ChromeOptions chromeOptions = new ChromeOptions();
+
             chromeOptions.setPageLoadStrategy(PageLoadStrategy.EAGER);
+            chromeOptions.addArguments("--lang=en-US");
+
             webDriver = new ChromeDriver(chromeOptions);
+
             break;
+      
 
         case "firefox":
             FirefoxOptions firefoxOptions = new FirefoxOptions();
