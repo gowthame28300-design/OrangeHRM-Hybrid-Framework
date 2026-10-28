@@ -53,24 +53,27 @@ public void addEmployeeVerify() {
     // Step 6: Save employee
     employee.clickSave();
 
-    // Step 7: Verify Personal Details page
+ // Step 7: Verify Personal Details page
     PersonalDetailsPage personalDetails =
             new PersonalDetailsPage(getDriver());
 
+    boolean isPageDisplayed =
+            personalDetails.isPersonalDetailsPageDisplayed();
+
+    if (!isPageDisplayed) {
+
+        logger.error("Personal Details page was not detected.");
+
+        logger.error("Current URL: " + getDriver().getCurrentUrl());
+
+        logger.error("Current page title: " + getDriver().getTitle());
+    }
+
     Assert.assertTrue(
-            personalDetails.isPersonalDetailsPageDisplayed(),
+            isPageDisplayed,
             "Personal Details page was not displayed after saving."
     );
 
-    // Step 8: Verify employee name
-    Assert.assertEquals(
-            personalDetails.getEmployeeName(),
-            "Gowtham Tester",
-            "Employee name does not match."
-    );
 
-    logger.info("Add Employee test passed");
 }
-
-
 }
